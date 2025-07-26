@@ -1,0 +1,100 @@
+<div class="flex min-h-screen bg-gray-50 text-gray-800 font-sans">
+  <!-- Sidebar -->
+    <aside class="w-64 bg-[#1e293b] text-white p-6 flex flex-col justify-between min-h-screen shadow-lg">
+        <div>
+            <h2 class="text-3xl font-bold mb-10 tracking-wide text-white">PatchPro</h2>
+            <nav class="flex flex-col gap-4 text-sm font-medium">
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-200 bg-blue-700">
+                <span class="text-lg">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+                <span class="text-lg">👥</span>
+                <span>Customers</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+                <span class="text-lg">💻</span>
+                <span>Agents</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+                <span class="text-lg">🧩</span>
+                <span>Patches</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-200">
+                <span class="text-lg">📜</span>
+                <span>Activity</span>
+            </a>
+            </nav>
+        </div>
+    </aside>
+
+
+  <!-- Main -->
+  <main class="flex-1 p-8">
+    <h1 class="text-3xl font-bold mb-8">Patch Management Dashboard</h1>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-xl shadow text-center">
+        <div class="text-3xl font-bold">{{ summary.customers }}</div>
+        <div class="text-sm text-gray-500 uppercase">Customers</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow text-center">
+        <div class="text-3xl font-bold">{{ summary.agents }}</div>
+        <div class="text-sm text-gray-500 uppercase">Agents</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow text-center">
+        <div class="text-3xl font-bold">{{ summary.patches }}</div>
+        <div class="text-sm text-gray-500 uppercase">Patches</div>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow text-center">
+        <div class="text-3xl font-bold">{{ summary.deployments }}</div>
+        <div class="text-sm text-gray-500 uppercase">Deployments</div>
+      </div>
+    </div>
+
+    <!-- Deployment Status -->
+    <div class="bg-white p-6 rounded-xl shadow mb-8">
+      <h2 class="text-xl font-semibold mb-4">Patch Deployment Status</h2>
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-left text-gray-500 border-b">
+            <th class="py-2">Hostname</th>
+            <th class="py-2">Agent</th>
+            <th class="py-2">IP</th>
+            <th class="py-2">Status</th>
+            <th class="py-2">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of deployments" class="border-b hover:bg-gray-50">
+            <td class="py-2">{{ d.hostname }}</td>
+            <td class="py-2">{{ d.agent_status }}</td>
+            <td class="py-2">{{ d.ip_address }}</td>
+            <td class="py-2">
+              <span class="px-2 py-1 rounded-full text-xs font-bold uppercase"
+                    [ngClass]="{
+                      'bg-green-100 text-green-800': d.deployment_status === 'Success',
+                      'bg-red-100 text-red-800': d.deployment_status === 'Failed',
+                      'bg-yellow-100 text-yellow-800': d.deployment_status === 'In Progress'
+                    }">
+                {{ d.deployment_status }}
+              </span>
+            </td>
+            <td class="py-2">{{ d.deployment_time | date:'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Notifications -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h2 class="text-xl font-semibold mb-4">Recent Notifications</h2>
+      <ul class="space-y-3">
+        <li *ngFor="let n of notifications" class="text-sm p-3 bg-gray-50 rounded shadow-sm">
+          <strong class="text-blue-600">{{ n.action_type }}:</strong> {{ n.details }} <span class="text-gray-500">({{ n.timestamp | date:'shortTime' }})</span>
+        </li>
+      </ul>
+    </div>
+  </main>
+</div>
