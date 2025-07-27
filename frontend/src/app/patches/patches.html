@@ -1,0 +1,70 @@
+<div class="p-8">
+  <h1 class="text-2xl font-bold mb-6">Patch Management</h1>
+
+  <!-- Filters -->
+  <div class="flex flex-wrap items-center gap-4 mb-6">
+    <input [(ngModel)]="q" (input)="applyFilters()" placeholder="🔍 Search patch version or description"
+           class="px-4 py-2 rounded border border-gray-300 w-full sm:w-64" />
+
+    <select [(ngModel)]="platform" (change)="applyFilters()"
+            class="px-4 py-2 rounded border border-gray-300 w-full sm:w-48">
+      <option value="">All Platforms</option>
+      <option value="Windows">Windows</option>
+      <option value="Linux">Linux</option>
+      <option value="macOS">macOS</option>
+    </select>
+
+    <select [(ngModel)]="os" (change)="applyFilters()"
+            class="px-4 py-2 rounded border border-gray-300 w-full sm:w-48">
+      <option value="">All OS Versions</option>
+      <option value="Windows 10">Windows 10</option>
+      <option value="Ubuntu 20.04">Ubuntu 20.04</option>
+      <option value="macOS Ventura">macOS Ventura</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white p-6 rounded-xl shadow">
+    <table class="min-w-full text-sm">
+      <thead class="text-left text-gray-500 border-b">
+        <tr>
+          <th class="py-2">Version</th>
+          <th class="py-2">Platform</th>
+          <th class="py-2">OS</th>
+          <th class="py-2">Released</th>
+          <th class="py-2">Status</th>
+          <th class="py-2">Success</th>
+          <th class="py-2">Failed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patch of patches" class="border-b hover:bg-gray-50">
+          <td class="py-2 font-medium">{{ patch.patch_version }}</td>
+          <td class="py-2">{{ patch.platform }}</td>
+          <td class="py-2">{{ patch.os_version_supported }}</td>
+          <td class="py-2">{{ patch.release_date | date:'shortDate' }}</td>
+          <td class="py-2">
+            <span class="px-2 py-1 rounded-full text-xs font-bold uppercase"
+              [ngClass]="{
+                'bg-green-100 text-green-800': patch.status === 'Released',
+                'bg-yellow-100 text-yellow-800': patch.status === 'Pending',
+                'bg-red-100 text-red-800': patch.status === 'Deprecated'
+              }">
+              {{ patch.status }}
+            </span>
+          </td>
+          <td class="py-2">{{ patch.success_count }}</td>
+          <td class="py-2">{{ patch.failed_count }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-between mt-6">
+    <button (click)="prevPage()" [disabled]="page === 1"
+            class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">Previous</button>
+    <button (click)="nextPage()"
+            class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">Next</button>
+  </div>
+</div>

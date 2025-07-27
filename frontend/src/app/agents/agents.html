@@ -1,0 +1,59 @@
+<div class="p-8">
+  <h1 class="text-2xl font-bold mb-6">Agents</h1>
+
+  <!-- Filters -->
+  <div class="flex flex-wrap gap-4 mb-6">
+    <input type="text" [(ngModel)]="search" (input)="onFilterChange()" placeholder="Search hostname or IP..." class="px-4 py-2 border rounded w-64" />
+
+    <select [(ngModel)]="status" (change)="onFilterChange()" class="px-4 py-2 border rounded">
+      <option value="">All Statuses</option>
+      <option value="Online">Online</option>
+      <option value="Offline">Offline</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white p-6 rounded-xl shadow">
+    <table class="min-w-full text-sm">
+      <thead class="text-left text-gray-500 border-b">
+        <tr>
+          <th class="py-2">Agent Id</th>
+          <th class="py-2 cursor-pointer" (click)="changeSort('hostname')">Hostname</th>
+          <th class="py-2">IP Address</th>
+          <th class="py-2">Customer</th>
+          <th class="py-2">OS Version</th>
+          <th class="py-2 cursor-pointer" (click)="changeSort('status')">Status</th>
+          <th class="py-2 cursor-pointer" (click)="changeSort('last_seen')">Last Seen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of agents" class="border-b hover:bg-gray-50">
+          <td class="py-2">{{ a.agent_id }}</td>
+          <td class="py-2 text-blue-700 hover:underline cursor-pointer">{{ a.hostname }}</td>
+          <td class="py-2">{{ a.ip_address }}</td>
+          <td class="py-2">{{ a.customer_name || '—' }}</td>
+          <td class="py-2">{{ a.os_version }}</td>
+          <td class="py-2">
+            <span class="px-2 py-1 text-xs rounded-full font-bold"
+              [ngClass]="{
+                'bg-green-100 text-green-700': a.status === 'Online',
+                'bg-red-100 text-red-700': a.status === 'Offline'
+              }">
+              {{ a.status }}
+            </span>
+          </td>
+          <td class="py-2">
+            {{ a.last_seen | date:'short' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-between items-center mt-4 text-sm">
+    <button (click)="prevPage()" [disabled]="page === 1" class="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">Previous</button>
+    <span>Page {{ page }}</span>
+    <button (click)="nextPage()" class="px-4 py-2 bg-gray-200 rounded">Next</button>
+  </div>
+</div>
